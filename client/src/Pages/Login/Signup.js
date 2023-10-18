@@ -1,9 +1,10 @@
 import React, { useContext } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../Components/Button/PrimaryButton";
 import { AuthContext } from "../../contexts/AuthProvider";
 import toast from "react-hot-toast";
+import SmallSpinner from "../../Components/Spinner/SmallSpinner";
 
 const Signup = () => {
   const {
@@ -14,6 +15,10 @@ const Signup = () => {
     loading,
     setLoading,
   } = useContext(AuthContext);
+
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = location.state?.from?.pathname || '/'
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -47,7 +52,7 @@ const Signup = () => {
                 // Email verifcation
                 verifyEmail().then((result) => {
                   toast.success(`Please verify Your Email`);
-                  console.log(user)
+                  navigate(from,{replace: true})
                   event.target.reset()
                 });
               })
@@ -58,7 +63,10 @@ const Signup = () => {
         // Update user profile
         updateUserProfile(name, data.display_url);
       })
-      .catch((error) => console.log(error));
+      .catch((error) => {
+        console.log(error)
+        setLoading(false)
+      });
   };
 
   const handleGoogleAuth = () =>{
@@ -146,7 +154,7 @@ const Signup = () => {
                 type="submit"
                 classes="w-full px-8 py-3 font-semibold rounded-md bg-gray-900 hover:bg-gray-700 hover:text-white text-gray-100"
               >
-                Sign up
+                {loading ? <SmallSpinner></SmallSpinner> : 'Sign up'}
               </PrimaryButton>
             </div>
           </div>

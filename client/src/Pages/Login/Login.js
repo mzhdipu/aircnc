@@ -1,12 +1,16 @@
 import React, { useContext } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../Components/Button/PrimaryButton";
 import { AuthContext } from "../../contexts/AuthProvider";
 import toast from "react-hot-toast";
+import SmallSpinner from "../../Components/Spinner/SmallSpinner";
 
 const Login = () => {
   const { verifyEmail, signin, resetPassword, loading, setLoading, signInWithGoogle } =
     useContext(AuthContext);
+    const navigate = useNavigate()
+    const location = useLocation()
+    const from = location.state?.from?.pathname || '/'
   
   const handleLogin = (event)=>{
     event.preventDefault()
@@ -18,8 +22,12 @@ const Login = () => {
     .then((result =>{
       const user = result.user 
       toast.success(`Your Login Successfully`)
-
+      navigate(from,{replace: true})
     }))
+    .catch(error =>{
+      toast.error(error.message)
+      setLoading(false)
+    })
     
   }
   return (
@@ -74,7 +82,7 @@ const Login = () => {
               type="submit"
               classes="w-full px-8 py-3 font-semibold rounded-md bg-gray-900 hover:bg-gray-700 hover:text-white text-gray-100"
             >
-              Sign in
+              {loading? <SmallSpinner></SmallSpinner> : 'Sign in'}
             </PrimaryButton>
           </div>
         </form>

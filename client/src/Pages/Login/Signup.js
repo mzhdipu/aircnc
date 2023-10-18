@@ -69,11 +69,14 @@ const Signup = () => {
       });
   };
 
+  
+  // GOOGLE LOGIN SETUP
   const handleGoogleAuth = () =>{
     signInWithGoogle()
     .then((result =>{
       const user = result.user 
       toast.success(`Registration With Google Successfully`)
+      navigate(from,{replace: true})
     }))
     .catch(error => console.log(error))
   }

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import PrimaryButton from "../../Components/Button/PrimaryButton";
 import { AuthContext } from "../../contexts/AuthProvider";
@@ -6,7 +6,8 @@ import toast from "react-hot-toast";
 import SmallSpinner from "../../Components/Spinner/SmallSpinner";
 
 const Login = () => {
-  const { verifyEmail, signin, resetPassword, loading, setLoading, signInWithGoogle } =
+  const [userEmail, setUserEmail] = useState('')
+  const { signin, resetPassword, loading, setLoading, signInWithGoogle } =
     useContext(AuthContext);
     const navigate = useNavigate()
     const location = useLocation()
@@ -30,6 +31,34 @@ const Login = () => {
     })
     
   }
+
+
+  // PASSWORD RESET
+  const handleResetPassword = () =>{
+    resetPassword(userEmail)
+    .then(()=>{
+      toast.success(`Please Check your Email and reset your password`)
+      setLoading(false)
+    })
+    .catch(error =>{
+      toast.error(`Please Write your Email Address in Email Field`)
+      setLoading(false)
+    })
+    
+  }
+
+
+  // GOOGLE LOING SETUP
+  const handleGoogleAuth = () =>{
+    signInWithGoogle()
+    .then((result =>{
+      const user = result.user 
+      setLoading(false)
+      toast.success(`Registration With Google Successfully`)
+      navigate(from,{replace: true})
+    }))
+    .catch(error => console.log(error))
+  }
   return (
     <div className="flex justify-center items-center pt-8">
       <div className="flex flex-col max-w-md p-6 rounded-md sm:p-10 bg-gray-100 text-gray-900">
@@ -51,6 +80,7 @@ const Login = () => {
                 Email address
               </label>
               <input
+              onBlur={(e)=> setUserEmail(e.target.value)}
                 type="email"
                 name="email"
                 id="email"
@@ -87,7 +117,7 @@ const Login = () => {
           </div>
         </form>
         <div className="space-y-1">
-          <button className="text-xs hover:underline text-gray-400">
+          <button onClick={handleResetPassword} className="text-xs hover:underline text-gray-400">
             Forgot password?
           </button>
         </div>
@@ -99,7 +129,7 @@ const Login = () => {
           <div className="flex-1 h-px sm:w-16 dark:bg-gray-700"></div>
         </div>
         <div className="flex justify-center space-x-4">
-          <button aria-label="Log in with Google" className="p-3 rounded-sm">
+          <button onClick={handleGoogleAuth} aria-label="Log in with Google" className="p-3 rounded-sm">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 32 32"

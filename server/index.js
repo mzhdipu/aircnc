@@ -21,6 +21,27 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     const homesCollection = client.db('aircncdb').collection('homes')
+    const usersCollection = client.db('aircncdb').collection('users')
+
+    app.put('/user/:email', async (req, res)=>{
+      const email = req.params.email 
+      const user = req.body 
+      const filter = {email : email}
+      
+      const options = { upsert: true };
+      
+      const updateDoc = {
+        $set: user
+      };
+
+      const result = await usersCollection.updateOne(filter, updateDoc, options);
+      console.log(result)
+
+      const token = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {expiresIn: '1d'})
+
+      res.send({result, token})
+
+    })
 
     console.log('Database Connected...')
   } finally {

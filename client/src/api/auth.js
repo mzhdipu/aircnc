@@ -4,7 +4,7 @@ export const setAuthToken = user =>{
     }
 
     // Save user in Database 
-    fetch(`http://localhost:5000/user/${user?.email}`,{
+    fetch(`http://localhost:8000/user/${user?.email}`,{
         method: "PUT",
         headers: {
             'content-type' : 'application.json'
@@ -13,8 +13,8 @@ export const setAuthToken = user =>{
     })
     .then(res => res.json())
     .then(data => {
-        localStorage.setItem('aircnc-token', data.token)
         console.log(data)
+        localStorage.setItem('aircnc-token', data.token)
     })
 
 

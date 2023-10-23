@@ -23,6 +23,7 @@ async function run() {
   try {
     const homesCollection = client.db('aircncdb').collection('homes')
     const usersCollection = client.db('aircncdb').collection('users')
+    const bookingsCollection = client.db('aircncdb').collection('bookings')
 
     app.put('/user/:email', async (req, res)=>{
       const email = req.params.email 
@@ -42,6 +43,14 @@ async function run() {
 
       res.send({result, token})
 
+    })
+
+    // Save Bookings Data
+    app.post('/bookings', async (req, res)=>{
+      const bookingsData = req.body 
+      const result = await bookingsCollection.insertOne(bookingsData)
+      console.log(result)
+      res.send(result)
     })
 
     console.log('Database Connected...')

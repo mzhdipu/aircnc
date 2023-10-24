@@ -1,7 +1,7 @@
 const express = require('express')
 const cors = require('cors')
 const jwt = require('jsonwebtoken');
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb')
+const { MongoClient, ServerApiVersion } = require('mongodb')
 require('dotenv').config()
 
 const app = express()
@@ -45,6 +45,17 @@ async function run() {
 
     })
 
+
+    // GET A SINGLE USER BY EMAIL
+    app.get('/user/:email', async (req, res) =>{
+      const email = req.params.email 
+      const query = {email : email}
+      const user = await usersCollection.findOne(query)
+      console.log(user);
+      res.send(user?.role) 
+    })
+
+
     // Save Bookings Data
     app.post('/bookings', async (req, res)=>{
       const bookingsData = req.body 
@@ -52,6 +63,25 @@ async function run() {
       console.log(result)
       res.send(result)
     })
+
+ 
+
+    // Get All Bookings
+    app.get('/bookings', async (req, res) =>{
+      let query = {}
+      const email = req.query.email
+      
+      if(email){
+        query = {
+          guestEmail : email
+        }
+      }
+      const bookings = await bookingsCollection.find(query).toArray()
+      res.send(bookings)
+    })
+
+
+    
 
     console.log('Database Connected...')
   } finally {

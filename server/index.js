@@ -81,7 +81,20 @@ async function run() {
     })
 
 
+    // GET ALL USERS
+    app.get('/users', async (req, res) =>{
+      const users = await usersCollection.find({}).toArray()
+      res.send(users)
+    })
+
     
+    // ADD A HOME
+    app.post('/homes', async (req, res) =>{
+      const homesData = await homesCollection.insertOne(req.body)
+      res.send(homesData)
+    })
+
+
 
     console.log('Database Connected...')
   } finally {

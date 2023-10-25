@@ -7,7 +7,7 @@ const AllBookings = () => {
   const [bookings, setBookings] = useState(null)
   const [loading, setLoading] = useState(true)
 
-  useEffect(() => {
+  useEffect(() => { 
     setLoading(true)
     getAllBookings(user?.email).then(data => {
       console.log(data)

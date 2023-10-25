@@ -22,7 +22,7 @@ const DashboardLayout = () => {
   return (
     <div className="md:flex relative min-h-screen gap-5">
       {loading ? (
-        <Spinner></Spinner>
+        ''
       ) : (
         <>
           <Sidebar role={role} className="w-64"></Sidebar>

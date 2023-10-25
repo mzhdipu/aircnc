@@ -7,15 +7,18 @@ import toast from "react-hot-toast";
 
 const BecomeAHost = () => {
   const { user } = useContext(AuthContext);
+  const [role, setRole] = useState(null)
+  const [loading, setLoading] = useState(true)
+  
 
-  const [userRole, setUserRole] = useState(null);
-
-useEffect(()=>{
-    getRole(user?.email).then(data =>{
-        console.log(data)
-        setUserRole(data)
-    })
-},[user])
+  useEffect(() => {
+    setLoading(true)
+    getRole(user?.email).then((data) => {
+      setRole(data);
+      console.log(data);
+      setLoading(false)
+    });
+  }, [user?.email]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -40,7 +43,13 @@ useEffect(()=>{
   };
   return (
     <div>
-      <BecomeHostForm handleSubmit={handleSubmit}></BecomeHostForm>
+       {role ? (
+        <div className='h-screen text-gray-600 flex flex-col justify-center items-center pb-16 text-xl lg:text-3xl'>
+          Request Sent, wait for admin approval
+        </div>
+      ) : (
+        <>{!loading && <BecomeHostForm handleSubmit={handleSubmit} />}</>
+      )}
     </div>
   );
 };

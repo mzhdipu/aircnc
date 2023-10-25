@@ -49,10 +49,10 @@ async function run() {
     // GET A SINGLE USER BY EMAIL
     app.get('/user/:email', async (req, res) =>{
       const email = req.params.email 
-      const query = {email : email}
+      const query = {email: email}
       const user = await usersCollection.findOne(query)
-      console.log(user);
-      res.send(user?.role) 
+      console.log(user?.role);
+      res.send(user) 
     })
 
 
